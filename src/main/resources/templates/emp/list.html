@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>vue-elementui</title>
+		<!--先引入vue.js库-->
+		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+		<!--axios-->
+		<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+		<!-- 引入样式 -->
+		<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+		<!-- 引入组件库 -->
+		<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+	</head>
+	<body>
+		<div id="app">
+
+			 <el-table
+		      :data="tableData"
+		      style="width: 100%">
+		      <el-table-column
+		        prop="ename"
+		        label="姓名"
+		        width="180">
+		      </el-table-column>
+		      <el-table-column
+		        prop="dno"
+		        label="编号"
+		        width="180">
+		      </el-table-column>
+		      <el-table-column
+		        prop="sex"
+		        label="性别">
+		      </el-table-column>
+				 <el-table-column
+						 prop="empno"
+						 label="员工编号">
+				 </el-table-column>
+				 <el-table-column
+						 prop="dname"
+						 label="部门名称">
+				 </el-table-column>
+				 <el-table-column
+						 prop="hiredate"
+						 label="入职时间">
+				 </el-table-column>
+		    </el-table>
+	    </div>
+	    <script>
+	    	var vue =new Vue({
+	    		el:"#app",
+	    		data:{
+	    			tableData:[]
+	    		},
+				created:function(){
+	    		   var self = this;
+                    axios.get('/demo4/emp/page/1')
+                        .then(function (response) {
+                            // handle success
+                            console.log(response);
+                            //JSON.stringify  把json对象转换为json字符串
+							console.log(JSON.stringify(response.data));
+							//JSON.parse()把json字符串转换为json对象
+                            console.log(response);
+                            self.tableData=response.data;
+                        })
+                        .catch(function (error) {
+                            // handle error
+                            console.log(error);
+                        })
+                        .then(function () {
+                            // always executed
+                        });
+				}
+	    	});
+	    </script>
+	</body>
+</html>

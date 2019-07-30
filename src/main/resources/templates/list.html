@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<link th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.css}" rel="stylesheet">
+<script th:src="@{/webjars/jquery/3.0.0/jquery.js}"></script>
+<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<head>
+    <meta charset="UTF-8">
+    <title>列表</title>
+    <script>
+        var pageBean;
+        function queryAll(curPage) {
+            $("#tbd").empty();
+            $.ajax({
+                url:"page/"+curPage,
+                type:"GET",
+                data:$("#form1").serialize(),
+                dataType:"json",
+                success:function (msg) {
+                    alert(msg);
+                    pageBean=msg;
+                    var emps=msg.list;
+                    for (var i = 0; i < emps.length; i++) {
+                        var emp=emps[i];
+                        var tr="<tr>";
+                        tr+="<td>"+emp.empno+"</td>";
+                        tr+="<td>"+emp.ename+"</td>";
+                        tr+="<td>"+emp.dname+"</td>";
+                        tr+="<td>"+emp.hiredate+"</td>";
+                        tr+="<td>"+emp.sex+"</td>";
+                        tr+="<td><input type='button' value='修改' data-toggle=\"modal\" data-target=\"#myModal\" onclick='queryById("+emp.classid+")'>" +
+                            "<input type='button' value='录入' onclick='insert()'>" +
+                            "<input type='button' value='删除' onclick='del("+emp.classid+")'></td>";
+                        tr+="</tr>";
+                        $("#tbd").append(tr);
+                    }
+                    var str="总页数："+pageBean.pages+"/当前页："+pageBean.pageNum;
+                    $("#pageinfo").html(str);
+                    $("#txtCurPage").val(pageBean.pageNum);
+                }
+            });
+        }
+
+        $(function () {
+            queryAll(1);
+        });
+
+        //点击按钮跳转
+        $(function () {
+            $("#btn2").click(function () {
+                var curPage=$("#txtCurPage").val();
+                queryAll(curPage);
+            });
+        });
+    </script>
+</head>
+<body>
+<form>
+    <div>
+        <input type="text" id="form1" name="ename">
+        <input type="button" value="查询" onclick="queryAll(1)">
+    </div>
+</form>
+<table class="table table-bordered">
+    <tr>
+        <td>编号</td>
+        <td>名字</td>
+        <td>部门</td>
+        <td>日期</td>
+        <td>性别</td>
+    </tr>
+    <tbody id="tbd"></tbody>
+</table>
+
+<ul class="pagination">
+    <li><span id="pageinfo"></span></li>
+    <li><a href="javascript:void(0)" onclick="queryAll(1)">首页</a></li>
+    <li><a href="javascript:void(0)" onclick="queryAll(pageBean.prePage)">上页</a></li>
+    <li><a href="javascript:void(0)" onclick="queryAll(pageBean.nextPage)">下页</a></li>
+    <li><a href="javascript:void(0)" onclick="queryAll(pageBean.pages)">尾页</a></li>
+    <li>
+        <input type="number" name="curPage"  min="1" step="1" id="txtCurPage" />
+        <input type="button" value="Go" id="btn2"/>
+    </li>
+</ul>
+</body>
+</html>
